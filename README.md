@@ -6,7 +6,7 @@ Cette application Android en Java permet de :
 - Afficher une liste de pizzas avec leur nom, prix, durée de préparation et image.  
 - Accéder à un **détail complet de chaque recette**.  
 
-Objectifs pédagogiques :  
+### Objectifs pédagogiques :  
 - Organisation d’un projet Android en packages logiques (`classes`, `dao`, `service`, `adapter`, `ui`).  
 - Utilisation d’une `ListView` avec un **Adapter personnalisé**.  
 - Passage de données entre activités.  
@@ -93,9 +93,9 @@ public class Produit {
         return nom + " - " + prix + " €";
     }}
  ```
-DAO et Service
+## DAO et Service
 
-Interface DAO :
+### Interface DAO :
  ```java
 public interface IDao<T> {
     T create(T t);
@@ -130,7 +130,7 @@ public class ProduitService implements IDao<Produit> {
  ```
 Splash Screen animé
 
-Layout activity_splash.xml :
+### Layout activity_splash.xml :
  ```xml
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent" android:layout_height="match_parent"
@@ -167,7 +167,7 @@ Layout activity_splash.xml :
     </LinearLayout>
 </FrameLayout>
  ```
-SplashActivity.java :
+### SplashActivity.java :
  ```java
 public class SplashActivity extends AppCompatActivity {
 
@@ -196,7 +196,7 @@ public class SplashActivity extends AppCompatActivity {
  ```
 Liste des pizzas
 
-activity_list_pizza.xml : ListView pour toutes les pizzas.
+### activity_list_pizza.xml : ListView pour toutes les pizzas.
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -255,10 +255,50 @@ row_pizza.xml : layout pour chaque pizza (image, nom, durée, prix).
 
 </RelativeLayout>
 ```
-PizzaAdapter.java : Adapter personnalisé.
+### PizzaAdapter.java : Adapter personnalisé.
+```java
+package com.example.pizzarecipes.adapter;
 
+import android.content.Context;
+import android.view.*;
+import android.widget.*;
+import com.example.pizzarecipes.R;
+import com.example.pizzarecipes.classes.Produit;
+import java.util.List;
 
-ListPizzaActivity.java : activité pour afficher la liste et gérer le clic.
+public class PizzaAdapter extends BaseAdapter {
+    private final Context ctx;
+    private final List<Produit> pizzas;
+
+    public PizzaAdapter(Context ctx, List<Produit> pizzas) {
+        this.ctx = ctx;
+        this.pizzas = pizzas;
+    }
+
+    @Override public int getCount() { return pizzas.size(); }
+    @Override public Object getItem(int i) { return pizzas.get(i); }
+    @Override public long getItemId(int i) { return pizzas.get(i).getId(); }
+
+    @Override
+    public View getView(int pos, View convertView, ViewGroup parent) {
+        if (convertView == null)
+            convertView = LayoutInflater.from(ctx).inflate(R.layout.row_pizza, parent, false);
+
+        ImageView img = convertView.findViewById(R.id.imgPizza);
+        TextView tvNom = convertView.findViewById(R.id.tvNom);
+        TextView tvMeta = convertView.findViewById(R.id.tvMeta);
+
+        Produit p = pizzas.get(pos);
+        img.setImageResource(p.getImageRes());
+        tvNom.setText(p.getNom());
+        tvMeta.setText(p.getDuree() + " • " + p.getPrix() + " €");
+
+        return convertView;
+    }
+}
+```
+
+### ListPizzaActivity.java : activité pour afficher la liste et gérer le clic.
 ```java
 package com.example.pizzarecipes.ui;
 
@@ -314,9 +354,9 @@ public class ListPizzaActivity extends AppCompatActivity {
     }
 }
 ```
-Détail d’une pizza
+## Détail d’une pizza
 
-activity_pizza_detail.xml : ScrollView avec image, nom, durée, prix, ingrédients, description et étapes.
+### activity_pizza_detail.xml : ScrollView avec image, nom, durée, prix, ingrédients, description et étapes.
 ```xml
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
@@ -408,7 +448,7 @@ activity_pizza_detail.xml : ScrollView avec image, nom, durée, prix, ingrédien
     </LinearLayout>
 </ScrollView>
 ```
-PizzaDetailActivity.java : charge les données depuis ProduitService et affiche le détail.
+### PizzaDetailActivity.java : charge les données depuis ProduitService et affiche le détail.
 ```java
 package com.example.pizzarecipes.ui;
 
@@ -459,7 +499,7 @@ public class PizzaDetailActivity extends AppCompatActivity {
     }
 }
 ```
-Résultat attendu
+## Résultat attendu
 
 Splash Screen avec logo et texte dynamique.
 
@@ -469,15 +509,15 @@ Détail complet d’une pizza sur clic.
 
 Code organisé en DAO / Service / Adapter / UI.
 
-Captures d’écran
-Splash Screen
+## Captures d’écran
+### Splash Screen
 ![](https://github.com/user-attachments/assets/39968d8e-8837-49b9-a660-51079f0808c3)
-Liste des pizzas
+### Liste des pizzas
 ![](https://github.com/user-attachments/assets/749b49cb-52da-437e-b0c8-59927038a65c)
-Détail pizza
+### Détail pizza
 ![](https://github.com/user-attachments/assets/1bc60ef9-838c-4d71-9375-b19cd11d7a47)
 	
-Technologies utilisées
+## Technologies utilisées
 
 Java & Android Studio
 

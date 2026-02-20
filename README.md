@@ -21,10 +21,15 @@ Objectifs pédagogiques :
 com.example.pizzarecipes
 │
 ├─ classes → entités métier (Produit)
+
 ├─ dao → interfaces CRUD (IDao)
+
 ├─ service → gestion et stockage des données (ProduitService)
+
 ├─ adapter → affichage personnalisé (PizzaAdapter)
+
 └─ ui → activités (SplashActivity, ListPizzaActivity, PizzaDetailActivity)
+
 - Images des pizzas (`pizza1.jpg` à `pizza10.jpg`) dans `res/mipmap`
   ![](https://github.com/user-attachments/assets/df6ed4bd-d191-49af-af7d-96a13beb9611)
   ![](https://github.com/user-attachments/assets/d56ef90a-511a-4e05-a6bf-d55458e63f92)
@@ -192,19 +197,268 @@ public class SplashActivity extends AppCompatActivity {
 Liste des pizzas
 
 activity_list_pizza.xml : ListView pour toutes les pizzas.
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFF8F0"
+    android:padding="8dp">
+
+<ListView
+android:id="@+id/lvPizzas"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:dividerHeight="8dp"
+android:clipToPadding="false"
+android:paddingBottom="8dp"/>
+    </LinearLayout>
 
 row_pizza.xml : layout pour chaque pizza (image, nom, durée, prix).
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:padding="8dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
 
+    <!-- Image de la pizza -->
+    <ImageView
+        android:id="@+id/imgPizza"
+        android:layout_width="96dp"
+        android:layout_height="96dp"
+        android:scaleType="centerCrop"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"/>
+
+    <!-- Nom de la pizza -->
+    <TextView
+        android:id="@+id/tvNom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@id/imgPizza"
+        android:layout_marginStart="12dp"
+        android:layout_alignTop="@id/imgPizza"
+        android:textStyle="bold"
+        android:textSize="16sp"
+        android:textColor="#5D4037"/>
+
+    <!-- Description ou métadonnées -->
+    <TextView
+        android:id="@+id/tvMeta"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tvNom"
+        android:layout_alignStart="@id/tvNom"
+        android:layout_marginTop="4dp"
+        android:textSize="14sp"
+        android:textColor="#8D6E63"/>
+
+</RelativeLayout>
+```
 PizzaAdapter.java : Adapter personnalisé.
 
-ListPizzaActivity.java : activité pour afficher la liste et gérer le clic.
 
+ListPizzaActivity.java : activité pour afficher la liste et gérer le clic.
+```java
+package com.example.pizzarecipes.ui;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.widget.ListView;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.pizzarecipes.R;
+import com.example.pizzarecipes.adapter.PizzaAdapter;
+import com.example.pizzarecipes.classes.Produit;
+import com.example.pizzarecipes.service.ProduitService;
+
+import java.util.List;
+
+public class ListPizzaActivity extends AppCompatActivity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_list_pizza);
+
+        // ListeView
+        ListView lv = findViewById(R.id.lvPizzas);
+
+        // Vérifier si ListView existe
+        if (lv == null) {
+            throw new RuntimeException("ListView lvPizzas introuvable dans activity_list_pizza.xml !");
+        }
+
+        // Récupérer toutes les pizzas
+        List<Produit> pizzas = ProduitService.getInstance().findAll();
+
+        // Vérifier si la liste n'est pas vide
+        if (pizzas == null || pizzas.isEmpty()) {
+            // Afficher un message si aucune pizza
+            // Par exemple : Toast ou TextView "Aucune pizza disponible"
+            return;
+        }
+
+        // Adapter
+        PizzaAdapter adapter = new PizzaAdapter(this, pizzas);
+        lv.setAdapter(adapter);
+
+        // Click sur un item
+        lv.setOnItemClickListener((parent, view, position, id) -> {
+            Produit selectedPizza = pizzas.get(position); // Récupérer l'objet produit
+            Intent intent = new Intent(this, PizzaDetailActivity.class);
+            intent.putExtra("pizza_id", selectedPizza.getId()); // passer l'ID réel
+            startActivity(intent);
+        });
+    }
+}
+```
 Détail d’une pizza
 
 activity_pizza_detail.xml : ScrollView avec image, nom, durée, prix, ingrédients, description et étapes.
+```xml
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFF8F0"> <!-- fond beige clair -->
 
+    <LinearLayout
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <!-- Image de la pizza -->
+        <ImageView
+            android:id="@+id/img"
+            android:layout_width="match_parent"
+            android:layout_height="220dp"
+            android:scaleType="centerCrop"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/round_corners_bg"/> <!-- drawable conservé -->
+
+        <!-- Nom -->
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:textSize="22sp"
+            android:textColor="#5D4037"
+            android:layout_marginBottom="4dp"/>
+
+        <!-- Meta (durée et prix) -->
+        <TextView
+            android:id="@+id/meta"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:textColor="#8D6E63"
+            android:layout_marginBottom="12dp"/>
+
+        <!-- Section ingrédients -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Ingrédients :"
+            android:textStyle="bold"
+            android:textColor="#5D4037"
+            android:textSize="16sp"
+            android:layout_marginBottom="4dp"/>
+        <TextView
+            android:id="@+id/ingredients"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#4E342E"
+            android:layout_marginBottom="12dp"/>
+
+        <!-- Section description -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Description :"
+            android:textStyle="bold"
+            android:textColor="#5D4037"
+            android:textSize="16sp"
+            android:layout_marginBottom="4dp"/>
+        <TextView
+            android:id="@+id/desc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#4E342E"
+            android:layout_marginBottom="12dp"/>
+
+        <!-- Section étapes -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Étapes :"
+            android:textStyle="bold"
+            android:textColor="#5D4037"
+            android:textSize="16sp"
+            android:layout_marginBottom="4dp"/>
+        <TextView
+            android:id="@+id/steps"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#4E342E"
+            android:layout_marginBottom="16dp"/>
+
+    </LinearLayout>
+</ScrollView>
+```
 PizzaDetailActivity.java : charge les données depuis ProduitService et affiche le détail.
+```java
+package com.example.pizzarecipes.ui;
 
+import android.os.Bundle;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.pizzarecipes.R;
+import com.example.pizzarecipes.classes.Produit;
+import com.example.pizzarecipes.service.ProduitService;
+
+public class PizzaDetailActivity extends AppCompatActivity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_pizza_detail);
+
+        // Récupération de l'ID de la pizza passé via l'intent
+        long id = getIntent().getLongExtra("pizza_id", -1);
+        Produit p = ProduitService.getInstance().findById(id);
+
+        // Références des vues
+        ImageView img = findViewById(R.id.img);
+        TextView title = findViewById(R.id.title);
+        TextView meta = findViewById(R.id.meta);
+        TextView ingredients = findViewById(R.id.ingredients);
+        TextView desc = findViewById(R.id.desc);
+        TextView steps = findViewById(R.id.steps);
+
+        // Remplissage des données si la pizza existe
+        if (p != null) {
+            img.setImageResource(p.getImageRes());
+            title.setText(p.getNom());
+            meta.setText(p.getDuree() + " • " + p.getPrix() + " €");
+            ingredients.setText(p.getIngredients());
+            desc.setText(p.getDescription());
+            steps.setText(p.getEtapes());
+        } else {
+            title.setText("Pizza introuvable !");
+            meta.setText("");
+            ingredients.setText("");
+            desc.setText("");
+            steps.setText("");
+        }
+    }
+}
+```
 Résultat attendu
 
 Splash Screen avec logo et texte dynamique.
@@ -216,9 +470,12 @@ Détail complet d’une pizza sur clic.
 Code organisé en DAO / Service / Adapter / UI.
 
 Captures d’écran
-Splash Screen	Liste des pizzas	Détail pizza
-
-	
+Splash Screen
+![](https://github.com/user-attachments/assets/39968d8e-8837-49b9-a660-51079f0808c3)
+Liste des pizzas
+![](https://github.com/user-attachments/assets/749b49cb-52da-437e-b0c8-59927038a65c)
+Détail pizza
+![](https://github.com/user-attachments/assets/1bc60ef9-838c-4d71-9375-b19cd11d7a47)
 	
 Technologies utilisées
 

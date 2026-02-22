@@ -1,0 +1,17 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Thème principal en mode clair -->
+    <style name="Base.Theme.PizzaRecipes" parent="Theme.Material3.Light.NoActionBar">
+        <item name="android:windowBackground">@color/splash_background_color</item>
+    </style>
+
+    <style name="Theme.PizzaRecipes" parent="Base.Theme.PizzaRecipes" />
+
+    <!-- Thème du Splash -->
+    <style name="SplashTheme" parent="Theme.Material3.Light.NoActionBar">
+        <item name="android:windowBackground">@drawable/splash_background</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowDisablePreview">true</item>
+    </style>
+
+</resources>

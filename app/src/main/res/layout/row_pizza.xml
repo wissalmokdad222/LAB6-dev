@@ -1,0 +1,38 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:padding="8dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <!-- Image de la pizza -->
+    <ImageView
+        android:id="@+id/imgPizza"
+        android:layout_width="96dp"
+        android:layout_height="96dp"
+        android:scaleType="centerCrop"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"/>
+
+    <!-- Nom de la pizza -->
+    <TextView
+        android:id="@+id/tvNom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@id/imgPizza"
+        android:layout_marginStart="12dp"
+        android:layout_alignTop="@id/imgPizza"
+        android:textStyle="bold"
+        android:textSize="16sp"
+        android:textColor="#5D4037"/>
+
+    <!-- Description ou métadonnées -->
+    <TextView
+        android:id="@+id/tvMeta"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tvNom"
+        android:layout_alignStart="@id/tvNom"
+        android:layout_marginTop="4dp"
+        android:textSize="14sp"
+        android:textColor="#8D6E63"/>
+
+</RelativeLayout>

@@ -1,0 +1,89 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFF8F0"> <!-- fond beige clair -->
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <!-- Image de la pizza -->
+        <ImageView
+            android:id="@+id/img"
+            android:layout_width="match_parent"
+            android:layout_height="220dp"
+            android:scaleType="centerCrop"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/round_corners_bg"/> <!-- drawable conservé -->
+
+        <!-- Nom -->
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:textSize="22sp"
+            android:textColor="#5D4037"
+            android:layout_marginBottom="4dp"/>
+
+        <!-- Meta (durée et prix) -->
+        <TextView
+            android:id="@+id/meta"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:textColor="#8D6E63"
+            android:layout_marginBottom="12dp"/>
+
+        <!-- Section ingrédients -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Ingrédients :"
+            android:textStyle="bold"
+            android:textColor="#5D4037"
+            android:textSize="16sp"
+            android:layout_marginBottom="4dp"/>
+        <TextView
+            android:id="@+id/ingredients"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#4E342E"
+            android:layout_marginBottom="12dp"/>
+
+        <!-- Section description -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Description :"
+            android:textStyle="bold"
+            android:textColor="#5D4037"
+            android:textSize="16sp"
+            android:layout_marginBottom="4dp"/>
+        <TextView
+            android:id="@+id/desc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#4E342E"
+            android:layout_marginBottom="12dp"/>
+
+        <!-- Section étapes -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Étapes :"
+            android:textStyle="bold"
+            android:textColor="#5D4037"
+            android:textSize="16sp"
+            android:layout_marginBottom="4dp"/>
+        <TextView
+            android:id="@+id/steps"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#4E342E"
+            android:layout_marginBottom="16dp"/>
+
+    </LinearLayout>
+</ScrollView>
